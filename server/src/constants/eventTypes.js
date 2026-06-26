@@ -1,0 +1,25 @@
+export const PAGE_VIEW = 'PAGE_VIEW'
+export const CLICK = 'CLICK'
+export const SEARCH = 'SEARCH'
+export const VIDEO_PLAY = 'VIDEO_PLAY'
+export const VIDEO_PAUSE = 'VIDEO_PAUSE'
+export const VIDEO_COMPLETE = 'VIDEO_COMPLETE'
+export const QUIZ_START = 'QUIZ_START'
+export const QUIZ_SUBMIT = 'QUIZ_SUBMIT'
+export const COURSE_OPEN = 'COURSE_OPEN'
+export const SESSION_START = 'SESSION_START'
+export const SESSION_END = 'SESSION_END'
+
+export const EVENT_TYPES = [
+  PAGE_VIEW,
+  CLICK,
+  SEARCH,
+  VIDEO_PLAY,
+  VIDEO_PAUSE,
+  VIDEO_COMPLETE,
+  QUIZ_START,
+  QUIZ_SUBMIT,
+  COURSE_OPEN,
+  SESSION_START,
+  SESSION_END,
+]
