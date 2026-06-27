@@ -1,8 +1,11 @@
+import AppProviders from './providers/AppProviders';
+import AppRoutes from './routes/AppRoutes';
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-600">Intelligent User Behavior Platform</p>
-    </div>
+    <AppProviders>
+      <AppRoutes />
+    </AppProviders>
   )
 }
 
