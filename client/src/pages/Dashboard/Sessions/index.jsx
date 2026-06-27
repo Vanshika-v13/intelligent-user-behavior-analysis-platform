@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSessionAnalytics } from '../../hooks/queries/useAnalytics';
-import { useDashboard } from '../../contexts/DashboardContext';
-import { KPIGrid } from '../../components/dashboard/KPIGrid';
-import { MetricCard } from '../../components/dashboard/MetricCard';
-import { ChartContainer } from '../../components/dashboard/ChartContainer';
-import { AnalyticsTable } from '../../components/dashboard/AnalyticsTable';
-import { DateRangeSelector } from '../../components/dashboard/DateRangeSelector';
-import { ExportButton } from '../../components/dashboard/ExportButton';
+import { useSessionAnalytics } from '../../../hooks/queries/useAnalytics';
+import { useDashboard } from '../../../contexts/DashboardContext';
+import { KPIGrid } from '../../../components/dashboard/KPIGrid';
+import { MetricCard } from '../../../components/dashboard/MetricCard';
+import { ChartContainer } from '../../../components/dashboard/ChartContainer';
+import { AnalyticsTable } from '../../../components/dashboard/AnalyticsTable';
+import { DateRangeSelector } from '../../../components/dashboard/DateRangeSelector';
+import { ExportButton } from '../../../components/dashboard/ExportButton';
 import { Clock, Users, Zap, Calendar } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,

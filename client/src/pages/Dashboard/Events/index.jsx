@@ -1,12 +1,12 @@
 import React from 'react';
-import { useEventAnalytics } from '../../hooks/queries/useAnalytics';
-import { useDashboard } from '../../contexts/DashboardContext';
-import { KPIGrid } from '../../components/dashboard/KPIGrid';
-import { MetricCard } from '../../components/dashboard/MetricCard';
-import { ChartContainer } from '../../components/dashboard/ChartContainer';
-import { AnalyticsTable } from '../../components/dashboard/AnalyticsTable';
-import { DateRangeSelector } from '../../components/dashboard/DateRangeSelector';
-import { ExportButton } from '../../components/dashboard/ExportButton';
+import { useEventAnalytics } from '../../../hooks/queries/useAnalytics';
+import { useDashboard } from '../../../contexts/DashboardContext';
+import { KPIGrid } from '../../../components/dashboard/KPIGrid';
+import { MetricCard } from '../../../components/dashboard/MetricCard';
+import { ChartContainer } from '../../../components/dashboard/ChartContainer';
+import { AnalyticsTable } from '../../../components/dashboard/AnalyticsTable';
+import { DateRangeSelector } from '../../../components/dashboard/DateRangeSelector';
+import { ExportButton } from '../../../components/dashboard/ExportButton';
 import { MousePointerClick, Activity, FileText, Search as SearchIcon } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,

@@ -1,4 +1,6 @@
 import api from '../api';
+import { eventService } from '../events/eventService';
+import { sessionService } from '../sessions/sessionService';
 
 export const analyticsService = {
   getOverview: async () => {
@@ -20,5 +22,18 @@ export const analyticsService = {
   getEngagementAnalytics: async () => {
     const { data } = await api.get('/analytics/engagement');
     return data;
+  },
+  getUsersAnalytics: async () => {
+    // Temporary aggregation since /api/analytics/users does not exist
+    const [{ data: overview }, { data: sessions }, { data: events }] = await Promise.all([
+      api.get('/analytics/overview'),
+      api.get('/sessions'),
+      api.get('/events')
+    ]);
+    return {
+      overview,
+      sessions,
+      events
+    };
   }
 };

@@ -36,3 +36,10 @@ export function useEngagementAnalytics() {
     queryFn: analyticsService.getEngagementAnalytics,
   });
 }
+
+export function useUsersAnalytics() {
+  return useQuery({
+    queryKey: ['analytics_users'],
+    queryFn: analyticsService.getUsersAnalytics,
+  });
+}

@@ -4,22 +4,25 @@ const DashboardContext = createContext();
 
 export function DashboardProvider({ children }) {
   const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
-  const [selectedFilters, setSelectedFilters] = useState({});
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeCourse, setActiveCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedEventType, setSelectedEventType] = useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const value = {
     selectedDateRange,
     setSelectedDateRange,
-    selectedFilters,
-    setSelectedFilters,
-    sidebarCollapsed,
-    setSidebarCollapsed,
-    activeCourse,
-    setActiveCourse,
+    selectedCourse,
+    setSelectedCourse,
     selectedUser,
-    setSelectedUser
+    setSelectedUser,
+    selectedSession,
+    setSelectedSession,
+    selectedEventType,
+    setSelectedEventType,
+    sidebarCollapsed,
+    setSidebarCollapsed
   };
 
   return (
