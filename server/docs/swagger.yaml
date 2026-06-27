@@ -1,0 +1,742 @@
+openapi: 3.0.3
+info:
+  title: Intelligent User Behavior Platform API
+  description: Backend API for user session tracking, event analytics, and engagement insights.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+tags:
+  - name: Health
+    description: Server health checks
+  - name: Courses
+    description: Course catalog endpoints
+  - name: Sessions
+    description: User session lifecycle
+  - name: Events
+    description: User interaction event tracking
+  - name: Analytics
+    description: Aggregated analytics and insights
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns server status and runtime information.
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                success: true
+                status: ok
+                message: Server is running
+                server:
+                  environment: development
+                  uptime: 123.45
+                  nodeVersion: v20.10.0
+                timestamp: '2026-06-26T12:00:00.000Z'
+  /api/courses:
+    get:
+      tags: [Courses]
+      summary: List courses
+      description: Returns paginated courses with optional search and category filtering.
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by title or description
+          example: React
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category
+          example: Web Development
+      responses:
+        '200':
+          description: Course list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseListResponse'
+  /api/courses/{id}:
+    get:
+      tags: [Courses]
+      summary: Get course by ID
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/sessions/start:
+    post:
+      tags: [Sessions]
+      summary: Start a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartSessionRequest'
+            example:
+              userId: 507f1f77bcf86cd799439011
+              device: desktop
+              browser: Chrome
+              os: Windows
+      responses:
+        '201':
+          description: Session started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStartResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/sessions/end:
+    post:
+      tags: [Sessions]
+      summary: End a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndSessionRequest'
+            example:
+              sessionId: 8f14e45f-ceea-467a-9a5c-0d8f6b8e3c21
+      responses:
+        '200':
+          description: Session ended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEndResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/sessions/{id}:
+    get:
+      tags: [Sessions]
+      summary: Get session by ID
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Session details with populated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/events:
+    post:
+      tags: [Events]
+      summary: Track an event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+            example:
+              sessionId: 507f1f77bcf86cd799439011
+              userId: 507f1f77bcf86cd799439012
+              eventType: PAGE_VIEW
+              page: /courses
+              metadata:
+                source: dashboard
+      responses:
+        '201':
+          description: Event tracked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    get:
+      tags: [Events]
+      summary: List events
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: eventType
+          in: query
+          schema:
+            type: string
+            enum:
+              - PAGE_VIEW
+              - CLICK
+              - SEARCH
+              - VIDEO_PLAY
+              - VIDEO_PAUSE
+              - VIDEO_COMPLETE
+              - QUIZ_START
+              - QUIZ_SUBMIT
+              - COURSE_OPEN
+              - SESSION_START
+              - SESSION_END
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated event list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+  /api/events/{id}:
+    get:
+      tags: [Events]
+      summary: Get event by ID
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/events/session/{sessionId}:
+    get:
+      tags: [Events]
+      summary: Get events by session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session events in chronological order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/events/user/{userId}:
+    get:
+      tags: [Events]
+      summary: Get events by user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Paginated user events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/analytics/overview:
+    get:
+      tags: [Analytics]
+      summary: Dashboard overview metrics
+      responses:
+        '200':
+          description: Overview analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsOverviewResponse'
+  /api/analytics/sessions:
+    get:
+      tags: [Analytics]
+      summary: Session analytics
+      responses:
+        '200':
+          description: Session analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsSessionsResponse'
+  /api/analytics/events:
+    get:
+      tags: [Analytics]
+      summary: Event analytics
+      responses:
+        '200':
+          description: Event analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEventsResponse'
+  /api/analytics/journeys:
+    get:
+      tags: [Analytics]
+      summary: Journey analytics
+      parameters:
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+          description: Optional session ID for a specific user journey
+      responses:
+        '200':
+          description: Journey analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsJourneysResponse'
+  /api/analytics/engagement:
+    get:
+      tags: [Analytics]
+      summary: Engagement analytics
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+          description: Optional user ID for individual engagement metrics
+      responses:
+        '200':
+          description: Engagement scores and levels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEngagementResponse'
+components:
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      example: 507f1f77bcf86cd799439011
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            message: Invalid id
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            message: Resource not found
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+    HealthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: string
+        message:
+          type: string
+        server:
+          type: object
+          properties:
+            environment:
+              type: string
+            uptime:
+              type: number
+            nodeVersion:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+    Course:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        thumbnail:
+          type: string
+        category:
+          type: string
+        duration:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CourseListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        totalCourses:
+          type: integer
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+    CourseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        course:
+          $ref: '#/components/schemas/Course'
+    StartSessionRequest:
+      type: object
+      required: [userId, device, browser, os]
+      properties:
+        userId:
+          type: string
+        device:
+          type: string
+        browser:
+          type: string
+        os:
+          type: string
+    EndSessionRequest:
+      type: object
+      required: [sessionId]
+      properties:
+        sessionId:
+          type: string
+    Session:
+      type: object
+      properties:
+        _id:
+          type: string
+        sessionId:
+          type: string
+        userId:
+          oneOf:
+            - type: string
+            - $ref: '#/components/schemas/User'
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        duration:
+          type: number
+        device:
+          type: string
+        browser:
+          type: string
+        os:
+          type: string
+        isActive:
+          type: boolean
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    SessionStartResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+    SessionEndResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+    SessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        session:
+          $ref: '#/components/schemas/Session'
+    CreateEventRequest:
+      type: object
+      required: [sessionId, userId, eventType, page]
+      properties:
+        sessionId:
+          type: string
+        userId:
+          type: string
+        eventType:
+          type: string
+        page:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    Event:
+      type: object
+      properties:
+        _id:
+          type: string
+        sessionId:
+          type: string
+        userId:
+          type: string
+        eventType:
+          type: string
+        page:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+    EventCreateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        event:
+          $ref: '#/components/schemas/Event'
+    EventListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        totalEvents:
+          type: integer
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    EventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event:
+          $ref: '#/components/schemas/Event'
+    EventSessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    AnalyticsOverviewResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            totalUsers:
+              type: integer
+            totalSessions:
+              type: integer
+            totalEvents:
+              type: integer
+            averageSessionDuration:
+              type: number
+            bounceRate:
+              type: number
+            activeUsers:
+              type: integer
+    AnalyticsSessionsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            averageSessionDuration:
+              type: number
+            bounceRate:
+              type: number
+            activeUsers:
+              type: integer
+            sessionDistribution:
+              type: array
+              items:
+                type: object
+                properties:
+                  bucket:
+                    type: string
+                  count:
+                    type: integer
+    AnalyticsEventsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            eventDistribution:
+              type: array
+              items:
+                type: object
+                properties:
+                  eventType:
+                    type: string
+                  count:
+                    type: integer
+            mostVisitedPages:
+              type: array
+              items:
+                type: object
+            mostClickedButtons:
+              type: array
+              items:
+                type: object
+            mostSearchedCourses:
+              type: array
+              items:
+                type: object
+    AnalyticsJourneysResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            userJourneys:
+              type: array
+              items:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                  journey:
+                    type: array
+                    items:
+                      type: object
+            dropOffPages:
+              type: array
+              items:
+                type: object
+            pageTransitions:
+              type: array
+              items:
+                type: object
+    AnalyticsEngagementResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            engagementScores:
+              type: array
+              items:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  engagementScore:
+                    type: number
+            engagementLevels:
+              type: array
+              items:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  level:
+                    type: string
+                    enum: [Low, Medium, High]
