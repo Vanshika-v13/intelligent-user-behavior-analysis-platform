@@ -5,6 +5,7 @@ import PageLoader from '../components/ui/PageLoader';
 
 // Lazy loading pages
 const Home = React.lazy(() => import('../pages/Home'));
+const About = React.lazy(() => import('../pages/About'));
 const Courses = React.lazy(() => import('../pages/Courses'));
 const CourseDetails = React.lazy(() => import('../pages/CourseDetails'));
 const Dashboard = React.lazy(() => import('../pages/Dashboard'));
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         {/* Main Routes */}
         <Route element={<MainLayout />}>
           <Route path={ROUTES.HOME} element={<Home />} />
+          <Route path={ROUTES.ABOUT} element={<About />} />
           <Route path={ROUTES.COURSES} element={<Courses />} />
           <Route path={ROUTES.COURSE_DETAILS} element={<CourseDetails />} />
         </Route>
