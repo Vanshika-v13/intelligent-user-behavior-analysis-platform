@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F97230;
+  --color-secondary: #FF8A4C;
+  --color-background: #FEFEFE;
+  --color-warm-white: #FAF9F7;
+  --color-light-gray: #F0EFED;
+  --color-border-gray: #DED9D3;
+  --color-primary-text: #131417;
+  --color-secondary-text: #5B5B5B;
+  --color-footer: #121212;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Satoshi', 'General Sans', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-primary-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.025em;
+  }
+}
