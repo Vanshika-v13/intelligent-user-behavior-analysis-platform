@@ -2,7 +2,6 @@ import React from 'react';
 import HeroSection from '../components/HeroSection';
 import FeaturesSection from '../components/landing/FeaturesSection';
 import CategoriesSection from '../components/landing/CategoriesSection';
-import CoursesPreviewSection from '../components/landing/CoursesPreviewSection';
 import LearningJourneySection from '../components/landing/LearningJourneySection';
 import StatisticsSection from '../components/landing/StatisticsSection';
 import FAQSection from '../components/landing/FAQSection';
@@ -15,7 +14,6 @@ const LandingPage = () => {
       <HeroSection />
       <FeaturesSection />
       <CategoriesSection />
-      <CoursesPreviewSection />
       <LearningJourneySection />
       <StatisticsSection />
       <FAQSection />

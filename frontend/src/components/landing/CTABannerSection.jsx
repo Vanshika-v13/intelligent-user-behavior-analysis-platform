@@ -20,7 +20,7 @@ const CTABannerSection = () => {
             </h2>
             
             <p className="text-[17px] md:text-[19px] text-stone-300 mb-10 max-w-[600px] leading-relaxed">
-              Explore interactive courses and begin your learning journey today.
+              Join thousands of learners and begin your journey to mastering new skills today.
             </p>
             
             <Link 

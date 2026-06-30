@@ -20,7 +20,7 @@ const HeroSection = () => {
               Explore curated technology courses, interactive videos, and hands-on quizzes designed to help you learn and grow.
             </p>
             <div className="mb-6 md:mb-8">
-              <button className="bg-[var(--color-primary-text)] text-[var(--color-background)] px-8 py-4 md:px-10 md:py-5 text-[15px] font-medium hover:bg-[#333] transition-colors duration-300 inline-flex items-center justify-center rounded-none">
+              <button className="bg-[var(--color-primary-text)] text-[var(--color-background)] px-8 py-3 md:px-10 md:py-3.5 text-[15px] font-medium hover:bg-[#333] transition-colors duration-300 inline-flex items-center justify-center rounded-none">
                 Start Learning Today
               </button>
             </div>

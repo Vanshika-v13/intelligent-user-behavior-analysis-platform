@@ -1,50 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Code, Terminal, Database, Server, Cloud, Briefcase } from 'lucide-react';
+import React from 'react';
+import { ArrowRight, Code, Terminal, Database, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { courseService } from '../../services/courseService';
 
-const iconMap = {
-  'Web Development': Code,
-  'Programming': Terminal,
-  'Data Structures': Database,
-  'Databases': Server,
-  'Cloud': Cloud,
-  'Career Skills': Briefcase,
-};
-
-const themeMap = {
-  'Web Development': { bg: 'bg-[#FFF6F0]', border: 'border-orange-100/50', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' },
-  'Programming': { bg: 'bg-[#FCFBF8]', border: 'border-amber-100/50', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' },
-  'Data Structures': { bg: 'bg-[#F9F6F0]', border: 'border-stone-200/50', iconBg: 'bg-stone-200', iconColor: 'text-stone-700' },
-  'Databases': { bg: 'bg-[#F4F4F4]', border: 'border-gray-200', iconBg: 'bg-gray-200', iconColor: 'text-gray-700' },
-  'Cloud': { bg: 'bg-gradient-to-br from-orange-50 to-[#FFF6F0]', border: 'border-orange-100/50', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' },
-  'Career Skills': { bg: 'bg-gradient-to-br from-gray-50 to-stone-50', border: 'border-gray-200', iconBg: 'bg-gray-200', iconColor: 'text-gray-700' },
-};
-
-const fallbackTheme = { bg: 'bg-[#F9F6F0]', border: 'border-stone-200/50', iconBg: 'bg-stone-200', iconColor: 'text-stone-700' };
+const categories = [
+  {
+    name: 'Database',
+    slug: 'database',
+    icon: Database,
+    theme: { bg: 'bg-stone-50', border: 'border-stone-200/50', iconBg: 'bg-stone-200', iconColor: 'text-stone-700' }
+  },
+  {
+    name: 'Developer Tools',
+    slug: 'developer-tools',
+    icon: Wrench,
+    theme: { bg: 'bg-orange-50/50', border: 'border-orange-100/50', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' }
+  },
+  {
+    name: 'Programming',
+    slug: 'programming',
+    icon: Terminal,
+    theme: { bg: 'bg-[#FCFBF8]', border: 'border-amber-100/50', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' }
+  },
+  {
+    name: 'Web Development',
+    slug: 'web-development',
+    icon: Code,
+    theme: { bg: 'bg-[#FFF6F0]', border: 'border-orange-100/50', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' }
+  }
+];
 
 const CategoriesSection = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await courseService.getCategories();
-        setCategories(data);
-      } catch (err) {
-        setError('Failed to load categories. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
   return (
-    <section id="categories" className="w-full bg-[var(--color-background)] py-16 xl:max-h-[75vh] flex flex-col justify-center overflow-hidden">
+    <section id="categories" className="w-full bg-[var(--color-background)] py-12 md:py-16 lg:py-20 flex flex-col justify-center overflow-hidden">
       <div className="max-w-[1280px] w-full mx-auto px-5 md:px-8">
         
         <div className="text-left md:text-center mb-12">
@@ -56,84 +43,50 @@ const CategoriesSection = () => {
           </p>
         </div>
 
-        {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="bg-gray-50 border border-gray-100 rounded-[24px] p-6 h-[150px] shadow-sm animate-pulse flex flex-col justify-between">
-                <div className="w-14 h-14 bg-gray-200 rounded-[18px]"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-4xl mx-auto">
+          {categories.map((cat, index) => {
+            const IconComponent = cat.icon;
+            const theme = cat.theme;
+            
+            return (
+              <Link
+                key={index}
+                to={`/courses?category=${cat.slug}`}
+                className={`
+                  w-full flex-shrink-0 
+                  ${theme.bg} border ${theme.border}
+                  rounded-[24px] p-6 h-[150px]
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 hover:bg-white/90
+                  transition-all duration-[300ms] group flex flex-col justify-between
+                  relative overflow-hidden
+                `}
+              >
+                {/* Subtle gradient background for premium feel */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        {error && (
-          <div className="text-center p-8 bg-red-50 text-red-600 rounded-[24px] mb-10 max-w-2xl mx-auto border border-red-100">
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-4 underline font-medium hover:text-red-700"
-            >
-              Try again
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && categories.length === 0 && (
-          <div className="text-center p-12 bg-gray-50 rounded-[24px] mb-10 border border-gray-200">
-            <p className="text-[var(--color-secondary-text)]">No categories available at the moment.</p>
-          </div>
-        )}
-
-        {!loading && !error && categories.length > 0 && (
-          <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 pb-4 md:pb-0 snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <style dangerouslySetInnerHTML={{__html: `
-              .hide-scrollbar::-webkit-scrollbar { display: none; }
-            `}} />
-            {categories.map((cat, index) => {
-              const name = typeof cat === 'string' ? cat : (cat.name || 'Category');
-              const slug = typeof cat === 'string' ? cat.toLowerCase().replace(/ /g, '-') : (cat.slug || name.toLowerCase().replace(/ /g, '-'));
-              const id = typeof cat === 'string' ? index : (cat.id || index);
-              
-              const IconComponent = iconMap[name] || Code;
-              const theme = themeMap[name] || fallbackTheme;
-              
-              return (
-                <Link
-                  key={id}
-                  to={`/courses?category=${slug}`}
-                  className={`
-                    w-[260px] md:w-full flex-shrink-0 snap-center 
-                    ${theme.bg} border ${theme.border}
-                    rounded-[24px] p-6 h-[150px]
-                    shadow-sm hover:shadow-md hover:-translate-y-[6px] hover:scale-[1.02]
-                    transition-all duration-[250ms] group flex flex-col justify-between
-                  `}
-                >
-                  <div className={`w-[56px] h-[56px] rounded-[18px] flex items-center justify-center ${theme.iconBg} group-hover:bg-[#333] group-hover:text-[var(--color-background)] transition-colors duration-[250ms]`}>
-                    <IconComponent className={`w-6 h-6 ${theme.iconColor} group-hover:text-[var(--color-background)]`} strokeWidth={2} />
+                <div className="relative z-10 w-[56px] h-[56px] rounded-[18px] flex items-center justify-center ${theme.iconBg} group-hover:bg-[var(--color-primary-text)] transition-colors duration-[300ms]">
+                  <IconComponent className={`w-6 h-6 ${theme.iconColor} group-hover:text-[var(--color-background)]`} strokeWidth={2} />
+                </div>
+                
+                <div className="relative z-10 flex items-center justify-between w-full">
+                  <h3 className="text-[17px] font-semibold text-[var(--color-primary-text)] truncate pr-2">
+                    {cat.name}
+                  </h3>
+                  <div className="w-6 h-6 flex items-center justify-center text-[var(--color-secondary-text)] group-hover:text-[var(--color-primary-text)] transform group-hover:translate-x-2 transition-all duration-[300ms]">
+                    <ArrowRight className="w-5 h-5" />
                   </div>
-                  
-                  <div className="flex items-center justify-between w-full">
-                    <h3 className="text-[17px] font-semibold text-[var(--color-primary-text)] truncate pr-2">
-                      {name}
-                    </h3>
-                    <div className="w-6 h-6 flex items-center justify-center text-[var(--color-secondary-text)] group-hover:text-[var(--color-primary-text)] transform group-hover:translate-x-1 transition-all duration-[250ms]">
-                      <ArrowRight className="w-5 h-5" />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
         <div className="text-center mt-10">
           <Link 
             to="/courses" 
-            className="inline-flex items-center justify-center bg-[var(--color-primary-text)] text-[var(--color-background)] px-8 py-4 text-[15px] font-medium hover:bg-[#333] hover:scale-[1.02] active:scale-[0.98] transition-all duration-[250ms] rounded-none shadow-sm"
+            className="inline-flex items-center justify-center bg-[var(--color-primary-text)] text-[var(--color-background)] px-8 py-4 text-[15px] font-medium hover:bg-[#333] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-[250ms] rounded-none shadow-sm hover:shadow-md"
           >
-            View All Courses
+            View All Categories
           </Link>
         </div>
       </div>

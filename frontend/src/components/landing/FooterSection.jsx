@@ -6,7 +6,7 @@ const FooterSection = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#FBFBFB] border-t border-stone-200/80 pt-20 pb-8 mt-auto">
+    <footer className="w-full bg-[#FBFBFB] border-t border-stone-200/80 pt-12 md:pt-16 lg:pt-20 pb-8 mt-auto">
       <div className="max-w-[1280px] w-full mx-auto px-5 md:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">

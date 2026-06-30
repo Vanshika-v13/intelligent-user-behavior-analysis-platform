@@ -89,7 +89,7 @@ const StatisticsSection = () => {
   ];
 
   return (
-    <section id="statistics" className="w-full bg-[var(--color-background)] py-16 xl:max-h-[60vh] flex flex-col justify-center overflow-hidden">
+    <section id="statistics" className="w-full bg-[var(--color-background)] py-12 md:py-16 lg:py-20 flex flex-col justify-center overflow-hidden">
       <div className="max-w-[1280px] w-full mx-auto px-5 md:px-8">
         
         <div className="text-center mb-12">

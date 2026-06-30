@@ -45,7 +45,7 @@ const FeaturesSection = () => {
   return (
     <section 
       id="features" 
-      className="w-full bg-[var(--color-background)] pt-[60px] pb-[40px] flex flex-col justify-center xl:min-h-[100vh] xl:max-h-[100vh]"
+      className="w-full bg-[var(--color-background)] py-12 md:py-16 lg:py-20 flex flex-col justify-center xl:min-h-[100vh] xl:max-h-[100vh]"
     >
       <div className="max-w-[1280px] w-full mx-auto px-5 md:px-8 flex flex-col justify-center">
         

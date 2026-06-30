@@ -81,14 +81,28 @@ const CoursesPreviewSection = () => {
         {/* Course Grid */}
         {!loading && !error && courses.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[28px] mb-[40px]">
-            {courses.map((course, index) => {
-              const id = course.id || index;
+            {courses.map((course) => {
+              // MongoDB documents expose _id, not id — always use _id for navigation
+              const id = course._id || course.id;
               const title = course.title || 'Untitled Course';
               const description = course.description || 'No description available for this course.';
               const category = course.category || 'General';
               const duration = course.duration || '2h 30m';
-              const lessonsCount = course.lessonsCount || '10 lessons';
-              const thumbnail = course.thumbnail || course.image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop';
+              const lessonsCount = course.lessonsCount || (course.lessons ? `${course.lessons.length} lessons` : '0 lessons');
+
+              // Resolve banner: skip placeholder URLs, prefer local /banner/<filename>
+              const resolveThumbnail = (raw) => {
+                if (!raw) return '/banner/html_css.jpg';
+                if (raw.startsWith('http://') || raw.startsWith('https://')) {
+                  if (raw.includes('placeholder.com') || raw.includes('via.placeholder')) {
+                    return '/banner/html_css.jpg';
+                  }
+                  return raw;
+                }
+                const filename = raw.replace(/^\/banner\//, '');
+                return `/banner/${filename}`;
+              };
+              const thumbnail = resolveThumbnail(course.thumbnail || course.image || course.banner);
 
               return (
                 <div
@@ -101,6 +115,7 @@ const CoursesPreviewSection = () => {
                       src={thumbnail}
                       alt={title}
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = '/banner/html_css.jpg'; }}
                       className="w-full h-full object-cover transition-transform duration-[400ms] group-hover:scale-105"
                     />
                   </div>

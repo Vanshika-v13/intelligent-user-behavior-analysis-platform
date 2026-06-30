@@ -70,7 +70,7 @@ const FAQSection = () => {
   };
 
   return (
-    <section id="faq" className="w-full bg-[var(--color-background)] py-16 lg:py-24 xl:max-h-[80vh] flex flex-col justify-center overflow-hidden">
+    <section id="faq" className="w-full bg-[var(--color-background)] py-12 md:py-16 lg:py-20 flex flex-col justify-center overflow-hidden">
       <div className="max-w-[1280px] w-full mx-auto px-5 md:px-8">
         
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
