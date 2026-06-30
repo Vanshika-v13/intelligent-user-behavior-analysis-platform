@@ -32,6 +32,20 @@ const courseSchema = new mongoose.Schema(
       required: [true, 'Course duration is required'],
       min: [0, 'Duration cannot be negative'],
     },
+    lessons: [
+      {
+        title: String,
+        youtubeUrl: String,
+        duration: String,
+        order: Number
+      }
+    ],
+    notes: [
+      {
+        title: String,
+        fileUrl: String
+      }
+    ]
   },
   {
     timestamps: true,

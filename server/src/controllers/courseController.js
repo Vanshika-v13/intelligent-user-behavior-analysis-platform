@@ -1,4 +1,4 @@
-import { getCourses, getCourseById } from '../services/courseService.js'
+import { getCourses, getCourseById, getCategories } from '../services/courseService.js'
 
 export const getCoursesHandler = async (req, res, next) => {
   try {
@@ -24,6 +24,19 @@ export const getCourseByIdHandler = async (req, res, next) => {
     res.status(200).json({
       success: true,
       course,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getCategoriesHandler = async (req, res, next) => {
+  try {
+    const categories = await getCategories()
+
+    res.status(200).json({
+      success: true,
+      categories,
     })
   } catch (error) {
     next(error)

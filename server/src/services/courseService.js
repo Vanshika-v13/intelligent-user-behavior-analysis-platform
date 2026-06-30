@@ -60,3 +60,11 @@ export const getCourseById = async (id) => {
 
   return course
 }
+
+/**
+ * Fetches distinct categories from courses.
+ */
+export const getCategories = async () => {
+  const categories = await Course.distinct('category')
+  return categories
+}

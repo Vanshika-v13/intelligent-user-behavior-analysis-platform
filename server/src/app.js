@@ -9,6 +9,8 @@ import courseRoutes from './routes/courseRoutes.js'
 import sessionRoutes from './routes/sessionRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import progressRoutes from './routes/progressRoutes.js'
 import { requestLogger } from './middleware/requestLogger.js'
 import { notFound } from './middleware/notFound.js'
 import { errorHandler } from './middleware/errorHandler.js'
@@ -30,6 +32,8 @@ app.use('/api', courseRoutes)
 app.use('/api', sessionRoutes)
 app.use('/api', eventRoutes)
 app.use('/api/analytics', analyticsRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/progress', progressRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
