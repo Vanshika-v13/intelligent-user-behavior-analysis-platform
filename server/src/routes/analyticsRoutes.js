@@ -8,6 +8,7 @@ import {
   trackEvent,
 } from '../controllers/analyticsController.js'
 import { protect } from '../middleware/authMiddleware.js'
+import { validateTrackEvent } from '../middleware/validateTrackEvent.js'
 
 const router = Router()
 
@@ -16,6 +17,6 @@ router.get('/sessions', getSessionsAnalytics)
 router.get('/events', getEventsAnalytics)
 router.get('/journeys', getJourneysAnalytics)
 router.get('/engagement', getEngagementAnalytics)
-router.post('/track', protect, trackEvent)
+router.post('/track', protect, validateTrackEvent, trackEvent)
 
 export default router

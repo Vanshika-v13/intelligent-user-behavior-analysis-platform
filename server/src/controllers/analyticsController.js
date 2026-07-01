@@ -5,94 +5,62 @@ import {
   getJourneyAnalytics,
   getEngagementAnalytics as fetchEngagementAnalytics,
 } from '../services/analyticsService.js'
-import Event from '../models/Event.js'
+import { persistAuthenticatedTrackEvent } from '../services/eventTrackingService.js'
+import { buildTrackEventDocument } from '../utils/eventPayloadBuilder.js'
+import { asyncHandler } from '../utils/asyncHandler.js'
+import { analyticsLogger } from '../utils/analyticsLogger.js'
 
-export const getOverview = async (req, res, next) => {
-  try {
-    const data = await getOverviewAnalytics()
+export const getOverview = asyncHandler(async (req, res) => {
+  const data = await getOverviewAnalytics()
 
-    res.status(200).json({
-      success: true,
-      data,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
+  res.status(200).json({
+    success: true,
+    data,
+  })
+})
 
-export const getSessionsAnalytics = async (req, res, next) => {
-  try {
-    const data = await getSessionAnalytics()
+export const getSessionsAnalytics = asyncHandler(async (req, res) => {
+  const data = await getSessionAnalytics()
 
-    res.status(200).json({
-      success: true,
-      data,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
+  res.status(200).json({
+    success: true,
+    data,
+  })
+})
 
-export const getEventsAnalytics = async (req, res, next) => {
-  try {
-    const data = await getEventAnalytics()
+export const getEventsAnalytics = asyncHandler(async (req, res) => {
+  const data = await getEventAnalytics()
 
-    res.status(200).json({
-      success: true,
-      data,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
+  res.status(200).json({
+    success: true,
+    data,
+  })
+})
 
-export const getJourneysAnalytics = async (req, res, next) => {
-  try {
-    const { sessionId } = req.query
-    const data = await getJourneyAnalytics(sessionId)
+export const getJourneysAnalytics = asyncHandler(async (req, res) => {
+  const { sessionId } = req.query
+  const data = await getJourneyAnalytics(sessionId)
 
-    res.status(200).json({
-      success: true,
-      data,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
+  res.status(200).json({
+    success: true,
+    data,
+  })
+})
 
-export const getEngagementAnalytics = async (req, res, next) => {
-  try {
-    const { userId } = req.query
-    const data = await fetchEngagementAnalytics(userId)
+export const getEngagementAnalytics = asyncHandler(async (req, res) => {
+  const { userId } = req.query
+  const data = await fetchEngagementAnalytics(userId)
 
-    res.status(200).json({
-      success: true,
-      data,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
+  res.status(200).json({
+    success: true,
+    data,
+  })
+})
 
 export const trackEvent = async (req, res, next) => {
   try {
-    const { eventType, page, metadata, timestamp } = req.body
-
-    if (!eventType) {
-      return res.status(400).json({
-        success: false,
-        message: 'eventType is required',
-      })
-    }
-
-    const event = await Event.create({
-      eventType,
-      page: page || req.body.page || '',
-      metadata: metadata || {},
-      timestamp: timestamp ? new Date(timestamp) : new Date(),
-      userId: req.user._id,
-      sessionId: req.body.sessionId || null,
-    })
+    const eventDocument = buildTrackEventDocument(req.body, req.user._id)
+    const event = await persistAuthenticatedTrackEvent(eventDocument)
 
     res.status(201).json({
       success: true,
@@ -100,8 +68,19 @@ export const trackEvent = async (req, res, next) => {
       event,
     })
   } catch (error) {
-    // Don't let analytics tracking errors crash the request
-    console.error('Analytics track error:', error.message)
+    if (error.statusCode) {
+      return next(error)
+    }
+
+    if (error.name === 'ValidationError') {
+      return next(error)
+    }
+
+    analyticsLogger.error('Track event storage failed', error, {
+      eventType: req.body?.eventType,
+      userId: req.user?._id?.toString(),
+    })
+
     res.status(200).json({
       success: true,
       message: 'Event acknowledged (storage skipped)',

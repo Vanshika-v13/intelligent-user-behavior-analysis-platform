@@ -1,7 +1,11 @@
-import { EVENT_TYPES } from '../constants/eventTypes.js'
+import { normalizeEventType } from '../utils/eventTypeNormalizer.js'
+
+const isPlainObject = (value) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value)
 
 /**
  * Validates request body for POST /api/events.
+ * Normalizes event types so legacy frontend aliases are accepted consistently.
  */
 export const validateEvent = (req, res, next) => {
   const { sessionId, userId, eventType, page, metadata } = req.body
@@ -19,7 +23,9 @@ export const validateEvent = (req, res, next) => {
     })
   }
 
-  if (!EVENT_TYPES.includes(eventType)) {
+  const normalizedEventType = normalizeEventType(eventType)
+
+  if (!normalizedEventType) {
     return res.status(400).json({
       success: false,
       message: 'Invalid event type',
@@ -28,7 +34,7 @@ export const validateEvent = (req, res, next) => {
 
   if (
     metadata !== undefined &&
-    (typeof metadata !== 'object' || metadata === null || Array.isArray(metadata))
+    !isPlainObject(metadata)
   ) {
     return res.status(400).json({
       success: false,
@@ -36,5 +42,6 @@ export const validateEvent = (req, res, next) => {
     })
   }
 
+  req.body.eventType = normalizedEventType
   next()
 }

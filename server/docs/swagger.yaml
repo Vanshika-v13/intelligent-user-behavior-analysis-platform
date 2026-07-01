@@ -199,6 +199,15 @@ paths:
               - COURSE_OPEN
               - SESSION_START
               - SESSION_END
+              - CERTIFICATE_GENERATED
+              - CERTIFICATE_VIEWED
+              - CERTIFICATE_DOWNLOADED
+              - CERTIFICATE_SHARED
+              - LESSON_STARTED
+              - LESSON_COMPLETED
+              - LESSON_MARKED_COMPLETE
+              - COURSE_COMPLETION_PERCENTAGE
+              - TIME_SPENT_LEARNING
         - name: userId
           in: query
           schema:
@@ -342,7 +351,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsEngagementResponse'
+  /api/analytics/track:
+    post:
+      tags: [Analytics]
+      summary: Track an authenticated analytics event
+      description: Records a user interaction event for the authenticated user. Accepts legacy frontend event aliases (e.g. lesson_started) which are normalized server-side.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackEventRequest'
+            example:
+              eventType: lesson_started
+              courseId: 507f1f77bcf86cd799439011
+              lessonId: intro-lesson
+              lessonTitle: Introduction
+      responses:
+        '201':
+          description: Event tracked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Not authorized, no token
+        '200':
+          description: Event acknowledged when storage fails unexpectedly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Event acknowledged (storage skipped)
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   parameters:
     IdParam:
       name: id
@@ -551,11 +614,46 @@ components:
           type: string
         eventType:
           type: string
+          description: Canonical event type or legacy alias (normalized server-side)
         page:
           type: string
         metadata:
           type: object
           additionalProperties: true
+    TrackEventRequest:
+      type: object
+      required: [eventType]
+      properties:
+        eventType:
+          type: string
+          description: Canonical event type or legacy alias such as lesson_started
+        page:
+          type: string
+        sessionId:
+          type: string
+          description: Optional MongoDB session _id
+        timestamp:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties: true
+        courseId:
+          type: string
+        lessonId:
+          type: string
+        lessonTitle:
+          type: string
+        source:
+          type: string
+        timeSpentSeconds:
+          type: number
+        completionPercentage:
+          type: number
+        completedLessons:
+          type: integer
+        totalLessons:
+          type: integer
     Event:
       type: object
       properties:

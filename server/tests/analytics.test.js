@@ -4,12 +4,14 @@ import {
   createTestUser,
   startTestSession,
   trackTestEvent,
+  createAuthToken,
 } from './helpers.js'
 import {
   PAGE_VIEW,
   CLICK,
   SEARCH,
   SESSION_END,
+  LESSON_STARTED,
 } from '../src/constants/eventTypes.js'
 
 describe('Analytics API', () => {
@@ -199,5 +201,53 @@ describe('Integration – complete user journey', () => {
     )
     expect(engagement.body.data.engagementScores[0].engagementScore).toBeGreaterThan(0)
     expect(engagement.body.data.engagementLevels[0].level).toBeDefined()
+  })
+
+  describe('POST /api/analytics/track', () => {
+    it('requires authentication', async () => {
+      const response = await request(app).post('/api/analytics/track').send({
+        eventType: PAGE_VIEW,
+      })
+
+      expect(response.status).toBe(401)
+    })
+
+    it('tracks a legacy frontend event with merged metadata', async () => {
+      const user = await createTestUser()
+      const token = createAuthToken(user._id)
+
+      const response = await request(app)
+        .post('/api/analytics/track')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          eventType: 'lesson_started',
+          courseId: 'course-123',
+          lessonId: 'lesson-1',
+          lessonTitle: 'Intro',
+        })
+
+      expect(response.status).toBe(201)
+      expect(response.body.success).toBe(true)
+      expect(response.body.event.eventType).toBe(LESSON_STARTED)
+      expect(response.body.event.metadata.courseId).toBe('course-123')
+      expect(response.body.event.metadata.lessonId).toBe('lesson-1')
+      expect(response.body.event.userId).toBe(user._id.toString())
+    })
+
+    it('rejects invalid event types with 400', async () => {
+      const user = await createTestUser()
+      const token = createAuthToken(user._id)
+
+      const response = await request(app)
+        .post('/api/analytics/track')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          eventType: 'invalid_frontend_event',
+        })
+
+      expect(response.status).toBe(400)
+      expect(response.body.success).toBe(false)
+      expect(response.body.message).toBe('Invalid event type')
+    })
   })
 })

@@ -18,8 +18,7 @@ import {
   calculatePageTransitions,
 } from '../analytics/journeyAnalytics.js'
 import {
-  calculateEngagementScore,
-  calculateUserEngagementLevel,
+  calculateEngagementFromMetrics,
 } from '../analytics/engagementAnalytics.js'
 
 const toDistributionArray = (distribution) =>
@@ -125,10 +124,7 @@ export const getJourneyAnalytics = async (sessionId) => {
  */
 export const getEngagementAnalytics = async (userId) => {
   if (userId) {
-    const [{ engagementScore }, { level }] = await Promise.all([
-      calculateEngagementScore(userId),
-      calculateUserEngagementLevel(userId),
-    ])
+    const { engagementScore, level } = await calculateEngagementFromMetrics(userId)
 
     return {
       engagementScores: [{ userId, engagementScore }],
@@ -141,10 +137,7 @@ export const getEngagementAnalytics = async (userId) => {
   const engagementData = await Promise.all(
     users.map(async ({ _id }) => {
       const id = _id.toString()
-      const [{ engagementScore }, { level }] = await Promise.all([
-        calculateEngagementScore(id),
-        calculateUserEngagementLevel(id),
-      ])
+      const { engagementScore, level } = await calculateEngagementFromMetrics(id)
 
       return { userId: id, engagementScore, level }
     })

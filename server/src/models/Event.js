@@ -47,6 +47,11 @@ const eventSchema = new mongoose.Schema(
   }
 )
 
+eventSchema.index({ sessionId: 1, timestamp: 1 })
+eventSchema.index({ eventType: 1, timestamp: -1 })
+eventSchema.index({ userId: 1, timestamp: -1 })
+eventSchema.index({ eventType: 1, page: 1 })
+
 const Event = mongoose.model('Event', eventSchema)
 
 export default Event

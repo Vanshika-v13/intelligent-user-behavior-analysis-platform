@@ -1,10 +1,16 @@
 import request from 'supertest'
+import jwt from 'jsonwebtoken'
 import app from '../src/app.js'
 import User from '../src/models/User.js'
 import Course from '../src/models/Course.js'
 import seedCourses from '../src/utils/seedCourses.js'
 
 export { request, app }
+
+export const createAuthToken = (userId) =>
+  jwt.sign({ id: userId }, process.env.JWT_SECRET || 'fallback_secret', {
+    expiresIn: '1d',
+  })
 
 export const createTestUser = async (overrides = {}) => {
   return User.create({

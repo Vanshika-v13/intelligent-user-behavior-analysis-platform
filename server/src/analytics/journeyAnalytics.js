@@ -1,30 +1,9 @@
-import mongoose from 'mongoose'
-import Session from '../models/Session.js'
+import { resolveSessionObjectId } from '../utils/analyticsValidators.js'
 import {
   aggregateUserJourneys,
   aggregateDropOffs,
   aggregatePageTransitions,
 } from '../services/analyticsAggregationService.js'
-
-const createError = (message) => {
-  const error = new Error(message)
-  error.statusCode = 404
-  return error
-}
-
-const resolveSessionObjectId = async (sessionId) => {
-  if (!sessionId || !mongoose.Types.ObjectId.isValid(sessionId)) {
-    throw createError('Session not found')
-  }
-
-  const session = await Session.findById(sessionId).select('_id')
-
-  if (!session) {
-    throw createError('Session not found')
-  }
-
-  return session._id
-}
 
 /**
  * Returns ordered page views for a session journey.

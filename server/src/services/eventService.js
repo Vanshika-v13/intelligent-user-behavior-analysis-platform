@@ -1,46 +1,8 @@
-import mongoose from 'mongoose'
 import Event from '../models/Event.js'
-import Session from '../models/Session.js'
-import User from '../models/User.js'
-import { EVENT_TYPES } from '../constants/eventTypes.js'
-
-const createError = (message, statusCode) => {
-  const error = new Error(message)
-  error.statusCode = statusCode
-  return error
-}
-
-const validateUserExists = async (userId) => {
-  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-    throw createError('User not found', 404)
-  }
-
-  const user = await User.findById(userId)
-  if (!user) {
-    throw createError('User not found', 404)
-  }
-
-  return user
-}
-
-const validateSessionExists = async (sessionId) => {
-  if (!sessionId || !mongoose.Types.ObjectId.isValid(sessionId)) {
-    throw createError('Session not found', 404)
-  }
-
-  const session = await Session.findById(sessionId)
-  if (!session) {
-    throw createError('Session not found', 404)
-  }
-
-  return session
-}
-
-const validateEventType = (eventType) => {
-  if (!eventType || !EVENT_TYPES.includes(eventType)) {
-    throw createError('Invalid event type', 400)
-  }
-}
+import { persistEvent } from './eventTrackingService.js'
+import { normalizeEventType } from '../utils/eventTypeNormalizer.js'
+import { validateUserExists, validateSessionExists } from '../utils/analyticsValidators.js'
+import { createError } from '../utils/appError.js'
 
 const parsePagination = ({ page, limit }) => {
   const currentPage = Math.max(1, parseInt(page, 10) || 1)
@@ -48,6 +10,12 @@ const parsePagination = ({ page, limit }) => {
   const skip = (currentPage - 1) * pageLimit
 
   return { currentPage, pageLimit, skip }
+}
+
+const validateEventTypeFilter = (eventType) => {
+  if (!normalizeEventType(eventType)) {
+    throw createError('Invalid event type', 400)
+  }
 }
 
 /**
@@ -60,19 +28,13 @@ export const createEvent = async ({
   page,
   metadata,
 }) => {
-  await validateUserExists(userId)
-  await validateSessionExists(sessionId)
-
-  const event = await Event.create({
+  return persistEvent({
     sessionId,
     userId,
     eventType,
     page,
-    metadata: metadata || {},
-    timestamp: new Date(),
+    metadata,
   })
-
-  return event
 }
 
 /**
@@ -89,8 +51,8 @@ export const getEvents = async ({
   const filter = {}
 
   if (eventType) {
-    validateEventType(eventType)
-    filter.eventType = eventType
+    validateEventTypeFilter(eventType)
+    filter.eventType = normalizeEventType(eventType)
   }
 
   if (userId) {

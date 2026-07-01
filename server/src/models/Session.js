@@ -61,6 +61,9 @@ const sessionSchema = new mongoose.Schema(
   }
 )
 
+sessionSchema.index({ userId: 1, isActive: 1 })
+sessionSchema.index({ isActive: 1, startTime: -1 })
+
 const Session = mongoose.model('Session', sessionSchema)
 
 export default Session

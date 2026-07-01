@@ -45,6 +45,19 @@ describe('Event API', () => {
       expect(response.body.success).toBe(false)
       expect(response.body.message).toBe('Invalid event type')
     })
+
+    it('normalizes legacy frontend event aliases', async () => {
+      const response = await request(app).post('/api/events').send({
+        sessionId: session._id.toString(),
+        userId: user._id.toString(),
+        eventType: 'lesson_completed',
+        page: '/courses/123',
+        metadata: { source: 'video_ended' },
+      })
+
+      expect(response.status).toBe(201)
+      expect(response.body.event.eventType).toBe('LESSON_COMPLETED')
+    })
   })
 
   describe('GET /api/events', () => {

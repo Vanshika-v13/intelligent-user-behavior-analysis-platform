@@ -1,26 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
-import mongoose from 'mongoose'
 import Session from '../models/Session.js'
-import User from '../models/User.js'
-
-const createError = (message, statusCode) => {
-  const error = new Error(message)
-  error.statusCode = statusCode
-  return error
-}
+import { validateUserExists } from '../utils/analyticsValidators.js'
+import { createError } from '../utils/appError.js'
 
 /**
  * Validates user existence and creates a new active session.
  */
 export const createSession = async ({ userId, device, browser, os }) => {
-  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-    throw createError('User not found', 404)
-  }
-
-  const user = await User.findById(userId)
-  if (!user) {
-    throw createError('User not found', 404)
-  }
+  await validateUserExists(userId)
 
   const session = await Session.create({
     sessionId: uuidv4(),
