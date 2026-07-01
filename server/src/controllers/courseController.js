@@ -1,4 +1,7 @@
 import { getCourses, getCourseById, getCategories } from '../services/courseService.js'
+import Course from '../models/Course.js'
+import User from '../models/User.js'
+import Quiz from '../models/Quiz.js'
 
 export const getCoursesHandler = async (req, res, next) => {
   try {
@@ -37,6 +40,30 @@ export const getCategoriesHandler = async (req, res, next) => {
     res.status(200).json({
       success: true,
       categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getStatsHandler = async (req, res, next) => {
+  try {
+    const [totalCourses, totalUsers, totalQuizzes] = await Promise.all([
+      Course.countDocuments(),
+      User.countDocuments(),
+      Quiz.countDocuments()
+    ])
+
+    // Count total lessons across all courses
+    const courses = await Course.find({}, 'lessons').lean()
+    const totalLessons = courses.reduce((acc, c) => acc + (c.lessons?.length || 0), 0)
+
+    res.status(200).json({
+      success: true,
+      totalCourses,
+      totalLessons,
+      totalUsers,
+      totalQuizzes
     })
   } catch (error) {
     next(error)

@@ -11,6 +11,8 @@ import eventRoutes from './routes/eventRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import progressRoutes from './routes/progressRoutes.js'
+import quizRoutes from './routes/quizRoutes.js'
+import certificateRoutes from './routes/certificateRoutes.js'
 import { requestLogger } from './middleware/requestLogger.js'
 import { notFound } from './middleware/notFound.js'
 import { errorHandler } from './middleware/errorHandler.js'
@@ -20,6 +22,9 @@ const __dirname = dirname(__filename)
 const swaggerDocument = YAML.load(join(__dirname, '../docs/swagger.yaml'))
 
 const app = express()
+
+// Serve static files from the public directory
+app.use(express.static(join(__dirname, '../public')))
 
 app.use(cors())
 app.use(requestLogger)
@@ -34,7 +39,10 @@ app.use('/api', eventRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/progress', progressRoutes)
+app.use('/api/quizzes', quizRoutes)
+app.use('/api/certificates', certificateRoutes)
 
+// Error Handling Middleware
 app.use(notFound)
 app.use(errorHandler)
 

@@ -14,6 +14,12 @@ import DashboardPage from '../pages/DashboardPage';
 import ProfilePage from '../pages/ProfilePage';
 import MyLearningPage from '../pages/MyLearningPage';
 import FeaturesPage from '../pages/FeaturesPage';
+import QuizPage from '../pages/QuizPage';
+import QuizResultsListPage from '../pages/QuizResultsListPage';
+import QuizResultPage from '../pages/QuizResultPage';
+import SettingsPage from '../pages/SettingsPage';
+import NotFoundPage from '../pages/NotFoundPage';
+import CertificatesPage from '../pages/CertificatesPage';
 import { ROUTES } from '../constants/routes';
 
 const AppRoutes = () => {
@@ -26,6 +32,8 @@ const AppRoutes = () => {
         {/* Protected routes in MainLayout */}
         <Route path={ROUTES.COURSES} element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
         <Route path={ROUTES.COURSE_DETAIL} element={<ProtectedRoute><CourseDetailPage /></ProtectedRoute>} />
+        <Route path={ROUTES.COURSE_DETAIL + '/quiz'} element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
+        <Route path={ROUTES.COURSE_DETAIL + '/quiz-result'} element={<ProtectedRoute><QuizResultPage /></ProtectedRoute>} />
         <Route path={ROUTES.ABOUT} element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
         <Route path={ROUTES.FEATURES} element={<ProtectedRoute><FeaturesPage /></ProtectedRoute>} />
       </Route>
@@ -40,8 +48,14 @@ const AppRoutes = () => {
       <Route element={<DashboardLayout />}>
         <Route path={ROUTES.DASHBOARD} element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
         <Route path={ROUTES.PROFILE} element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path={ROUTES.SETTINGS} element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
         <Route path={ROUTES.MY_LEARNING} element={<ProtectedRoute><MyLearningPage /></ProtectedRoute>} />
+        <Route path="/dashboard/quizzes" element={<ProtectedRoute><QuizResultsListPage /></ProtectedRoute>} />
+        <Route path="/dashboard/certificates" element={<ProtectedRoute><CertificatesPage /></ProtectedRoute>} />
       </Route>
+
+      {/* Fallback route */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

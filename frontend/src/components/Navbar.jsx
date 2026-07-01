@@ -69,9 +69,6 @@ const Navbar = () => {
               <Link to={ROUTES.DASHBOARD} className="text-sm font-medium text-[var(--color-primary-text)] hover:text-orange-600 transition-colors px-3 py-2">
                 Dashboard
               </Link>
-              <Link to={ROUTES.PROFILE} className="text-sm font-medium text-[var(--color-primary-text)] hover:text-orange-600 transition-colors px-3 py-2">
-                Profile
-              </Link>
               <button onClick={handleLogout} className="text-sm font-medium border border-stone-200 bg-white shadow-sm text-[var(--color-primary-text)] px-6 py-2.5 rounded-md hover:bg-stone-50 hover:shadow-md hover:-translate-y-0.5 transition-all">
                 Logout
               </button>
@@ -111,7 +108,6 @@ const Navbar = () => {
           {isAuthenticated ? (
             <div className="flex flex-col gap-2 mt-2">
               <Link to={ROUTES.DASHBOARD} onClick={() => setIsOpen(false)} className="text-base font-medium text-[var(--color-primary-text)] px-4 py-2 hover:bg-stone-50 rounded-lg">Dashboard</Link>
-              <Link to={ROUTES.PROFILE} onClick={() => setIsOpen(false)} className="text-base font-medium text-[var(--color-primary-text)] px-4 py-2 hover:bg-stone-50 rounded-lg">Profile</Link>
               <button onClick={handleLogout} className="text-base font-medium border border-stone-200 bg-white text-[var(--color-primary-text)] px-5 py-3 rounded-xl text-center shadow-sm mt-2">Logout</button>
             </div>
           ) : (

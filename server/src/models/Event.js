@@ -10,7 +10,7 @@ const eventSchema = new mongoose.Schema(
     sessionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Session',
-      required: [true, 'Session ID is required'],
+      default: null,
       index: true,
     },
     userId: {

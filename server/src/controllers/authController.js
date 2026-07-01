@@ -88,3 +88,80 @@ export const getMe = async (req, res, next) => {
     next(error)
   }
 }
+
+// @desc    Update user profile
+// @route   PUT /api/auth/me
+// @access  Private
+export const updateMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id)
+
+    if (user) {
+      user.name = req.body.name || user.name
+      user.email = req.body.email || user.email
+
+      // Currently no password update here, maybe in another route if needed
+      
+      const updatedUser = await user.save()
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        token: generateToken(updatedUser._id),
+      })
+    } else {
+      res.status(404).json({ message: 'User not found' })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+// @desc    Update password
+// @route   PUT /api/auth/password
+// @access  Private
+export const updatePassword = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).select('+password')
+
+    if (user) {
+      if (!user.password) {
+        return res.status(400).json({ message: 'User account has no password set' })
+      }
+
+      const isMatch = await user.comparePassword(req.body.currentPassword)
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Incorrect current password' })
+      }
+
+      user.password = req.body.newPassword
+      await user.save()
+
+      res.json({ message: 'Password updated successfully' })
+    } else {
+      res.status(404).json({ message: 'User not found' })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+// @desc    Delete user account
+// @route   DELETE /api/auth/me
+// @access  Private
+export const deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id)
+
+    if (user) {
+      // Implement soft delete or hard delete. Hard delete for simplicity since it's an educational platform
+      await User.deleteOne({ _id: user._id })
+      res.json({ message: 'User removed' })
+    } else {
+      res.status(404).json({ message: 'User not found' })
+    }
+  } catch (error) {
+    next(error)
+  }
+}

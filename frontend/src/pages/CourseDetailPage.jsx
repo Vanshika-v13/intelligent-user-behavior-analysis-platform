@@ -60,6 +60,8 @@ const CourseDetailPage = () => {
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const [quizPassed, setQuizPassed] = useState(false);
+  const [isLegacyCompleted, setIsLegacyCompleted] = useState(false);
 
   // ── Video player state ──────────────────────────────────────────────────────
   const [activeLesson, setActiveLesson] = useState(null);   // lesson object currently in player
@@ -95,6 +97,8 @@ const CourseDetailPage = () => {
           if (prog && Array.isArray(prog.completedLessons)) {
             setProgress(prog.completedLessons);
             setProgressPercentage(prog.progressPercentage || 0);
+            setQuizPassed(prog.quizPassed || false);
+            setIsLegacyCompleted(prog.isLegacyCompleted || false);
           }
         } catch {
           console.log('No progress found or error fetching progress.');
@@ -115,9 +119,11 @@ const CourseDetailPage = () => {
   }, []);
 
   // ── Helper: compute updated progress percentage ─────────────────────────────
-  const computePercentage = useCallback((newProgress, totalLessons) => {
+  const computePercentage = useCallback((newProgress, totalLessons, isLegacy, passedQuiz) => {
     if (!totalLessons) return 0;
-    return Math.min(100, Math.round((newProgress.length / totalLessons) * 100));
+    if (isLegacy) return 100;
+    const lessonsPercentage = (newProgress.length / totalLessons) * 80;
+    return Math.min(100, Math.round(lessonsPercentage + (passedQuiz ? 20 : 0)));
   }, []);
 
   // ── Core: mark a lesson completed (from API event OR manual click) ──────────
@@ -138,7 +144,7 @@ const CourseDetailPage = () => {
       // Update local state optimistically
       const newProgress = [...progress, lessonKey];
       const totalLessons = course?.lessons?.length || 0;
-      const newPct = computePercentage(newProgress, totalLessons);
+      const newPct = computePercentage(newProgress, totalLessons, isLegacyCompleted, quizPassed);
       setProgress(newProgress);
       setProgressPercentage(newPct);
 
@@ -169,7 +175,7 @@ const CourseDetailPage = () => {
     } catch (err) {
       console.error('Failed to save progress or track analytics:', err);
     }
-  }, [progress, course, id, computePercentage]);
+  }, [progress, course, id, computePercentage, isLegacyCompleted, quizPassed]);
 
   // ── Mount / update the YT.Player when activeLesson changes ─────────────────
   useEffect(() => {
@@ -598,6 +604,53 @@ const CourseDetailPage = () => {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* ── Quiz Section ─────────────────────────────────────────────── */}
+      <section className="w-full py-16 bg-[#F8FAFC] border-t border-[#E2E8F0]">
+        <div className="max-w-[900px] w-full mx-auto px-5 md:px-8">
+          <div className="bg-white border border-[#E2E8F0] rounded-[20px] p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-xl font-bold text-[#0F172A] mb-2 tracking-tight">Final Course Quiz</h3>
+              <p className="text-[#64748B]">
+                {isLegacyCompleted || quizPassed 
+                  ? "You have already completed this course's quiz requirements." 
+                  : "Complete all lessons to unlock the final quiz and earn your completion status."}
+              </p>
+            </div>
+            <div className="shrink-0 w-full md:w-auto">
+              {isLegacyCompleted || quizPassed ? (
+                <div className="flex flex-col gap-3">
+                  <span className="flex justify-center items-center gap-2 px-6 py-3 bg-[#F0FDF4] text-[#22C55E] font-bold rounded-xl border border-[#22C55E]/20">
+                    <CheckCircle2 size={20} /> Course Completed
+                  </span>
+                  {quizPassed && (
+                    <Link
+                      to={`/courses/${id}/quiz-result`}
+                      className="text-center text-sm font-semibold text-[#FF6B35] hover:text-[#E85D2C]"
+                    >
+                      View Results
+                    </Link>
+                  )}
+                </div>
+              ) : completedCount >= totalLessons ? (
+                <Link
+                  to={`/courses/${id}/quiz`}
+                  className="block w-full text-center px-8 py-3 bg-[#FF6B35] text-white font-bold rounded-xl shadow-[0_4px_14px_0_rgba(255,107,53,0.39)] hover:bg-[#E85D2C] hover:shadow-[0_6px_20px_rgba(255,107,53,0.23)] hover:-translate-y-0.5 transition-all"
+                >
+                  Take Final Quiz
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="flex w-full justify-center items-center gap-2 px-8 py-3 bg-[#F1F5F9] text-[#94A3B8] font-bold rounded-xl cursor-not-allowed border border-[#E2E8F0]"
+                >
+                  <Lock size={18} /> Locked
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 

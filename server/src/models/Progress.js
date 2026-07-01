@@ -23,6 +23,14 @@ const progressSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
+    quizPassed: {
+      type: Boolean,
+      default: false,
+    },
+    isLegacyCompleted: {
+      type: Boolean,
+      default: false,
+    },
     lastAccessed: {
       type: Date,
       default: Date.now,

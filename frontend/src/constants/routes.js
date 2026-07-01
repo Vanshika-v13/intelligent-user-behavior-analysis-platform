@@ -8,6 +8,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   MY_LEARNING: '/my-learning',
   PROFILE: '/profile',
+  SETTINGS: '/settings',
   ABOUT: '/about',
   FEATURES: '/features'
 };

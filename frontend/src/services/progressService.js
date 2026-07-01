@@ -16,5 +16,9 @@ export const progressService = {
     };
     const response = await api.post('/progress', payload);
     return response.data;
+  },
+  getAllProgress: async () => {
+    const response = await api.get('/progress');
+    return response.data;
   }
 };
