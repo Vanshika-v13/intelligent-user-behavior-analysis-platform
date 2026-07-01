@@ -36,24 +36,24 @@ const toEventDistributionArray = (distribution) =>
 /**
  * Returns high-level dashboard overview metrics.
  */
-export const getOverviewAnalytics = async () => {
-  return getDashboardOverview()
+export const getOverviewAnalytics = async (filters = {}) => {
+  return getDashboardOverview(filters)
 }
 
 /**
  * Returns combined session analytics for the dashboard.
  */
-export const getSessionAnalytics = async () => {
+export const getSessionAnalytics = async (filters = {}) => {
   const [
     { averageDuration },
     { bounceRate },
     { activeUsers },
     sessionDistribution,
   ] = await Promise.all([
-    calculateAverageSessionDuration(),
-    calculateBounceRate(),
-    calculateActiveUsers(),
-    calculateSessionDistribution(),
+    calculateAverageSessionDuration(filters),
+    calculateBounceRate(filters),
+    calculateActiveUsers(filters),
+    calculateSessionDistribution(filters),
   ])
 
   return {
@@ -67,17 +67,17 @@ export const getSessionAnalytics = async () => {
 /**
  * Returns combined event analytics for the dashboard.
  */
-export const getEventAnalytics = async () => {
+export const getEventAnalytics = async (filters = {}) => {
   const [
     eventDistribution,
     mostVisitedPages,
     mostClickedButtons,
     mostSearchedCourses,
   ] = await Promise.all([
-    calculateEventDistribution(),
-    calculateMostVisitedPages(),
-    calculateMostClickedButtons(),
-    calculateMostSearchedCourses(),
+    calculateEventDistribution(filters),
+    calculateMostVisitedPages(filters),
+    calculateMostClickedButtons(filters),
+    calculateMostSearchedCourses(filters),
   ])
 
   return {
@@ -91,10 +91,10 @@ export const getEventAnalytics = async () => {
 /**
  * Returns journey analytics for a session or platform-wide aggregates.
  */
-export const getJourneyAnalytics = async (sessionId) => {
+export const getJourneyAnalytics = async (sessionId, filters = {}) => {
   const [dropOffPages, pageTransitions] = await Promise.all([
-    calculateDropOffPages(),
-    calculatePageTransitions(),
+    calculateDropOffPages(filters),
+    calculatePageTransitions(filters),
   ])
 
   if (sessionId) {

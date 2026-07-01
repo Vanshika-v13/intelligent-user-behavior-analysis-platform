@@ -553,16 +553,38 @@ export const aggregateUserEngagementMetrics = async (userId) => {
 
 /**
  * Counts total documents across core analytics collections.
+ * When match filters are provided, counts scoped documents instead of platform totals.
  */
-export const aggregateDashboardCounts = async () => {
-  const [userCount, sessionCount, eventCount] = await Promise.all([
-    User.countDocuments(),
-    Session.countDocuments(),
-    Event.countDocuments(),
+export const aggregateDashboardCounts = async (
+  eventMatchFilter = {},
+  sessionMatchFilter = {}
+) => {
+  const hasEventFilter = eventMatchFilter && Object.keys(eventMatchFilter).length > 0
+  const hasSessionFilter =
+    sessionMatchFilter && Object.keys(sessionMatchFilter).length > 0
+
+  if (!hasEventFilter && !hasSessionFilter) {
+    const [userCount, sessionCount, eventCount] = await Promise.all([
+      User.countDocuments(),
+      Session.countDocuments(),
+      Event.countDocuments(),
+    ])
+
+    return {
+      totalUsers: userCount,
+      totalSessions: sessionCount,
+      totalEvents: eventCount,
+    }
+  }
+
+  const [sessionCount, eventCount, distinctUsers] = await Promise.all([
+    Session.countDocuments(sessionMatchFilter),
+    Event.countDocuments(eventMatchFilter),
+    Event.distinct('userId', eventMatchFilter),
   ])
 
   return {
-    totalUsers: userCount,
+    totalUsers: distinctUsers.length,
     totalSessions: sessionCount,
     totalEvents: eventCount,
   }

@@ -4,21 +4,33 @@ import {
   aggregateBounceRate,
   aggregateActiveUsers,
 } from '../services/analyticsAggregationService.js'
+import {
+  buildEventMatchFilter,
+  buildSessionMatchFilter,
+  hasActiveFilters,
+} from './analyticsFilters.js'
 
 /**
  * Returns high-level metrics for the analytics dashboard overview.
  */
-export const getDashboardOverview = async () => {
+export const getDashboardOverview = async (filters = {}) => {
+  const sessionMatch = hasActiveFilters(filters)
+    ? buildSessionMatchFilter(filters)
+    : {}
+  const eventMatch = hasActiveFilters(filters)
+    ? buildEventMatchFilter(filters)
+    : {}
+
   const [
     counts,
     averageSessionDuration,
     bounceRate,
     activeUsers,
   ] = await Promise.all([
-    aggregateDashboardCounts(),
-    aggregateAverageSessionDuration(),
-    aggregateBounceRate(),
-    aggregateActiveUsers(),
+    aggregateDashboardCounts(eventMatch, sessionMatch),
+    aggregateAverageSessionDuration(sessionMatch),
+    aggregateBounceRate(sessionMatch),
+    aggregateActiveUsers(sessionMatch),
   ])
 
   return {

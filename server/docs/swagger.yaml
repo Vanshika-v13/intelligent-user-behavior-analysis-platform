@@ -17,6 +17,8 @@ tags:
     description: User interaction event tracking
   - name: Analytics
     description: Aggregated analytics and insights
+  - name: Analytics V2
+    description: Phase 2 modular analytics endpoints
 paths:
   /api/health:
     get:
@@ -288,6 +290,9 @@ paths:
     get:
       tags: [Analytics]
       summary: Dashboard overview metrics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
       responses:
         '200':
           description: Overview analytics
@@ -295,10 +300,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsOverviewResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/analytics/sessions:
     get:
       tags: [Analytics]
       summary: Session analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
       responses:
         '200':
           description: Session analytics
@@ -306,10 +316,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsSessionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/analytics/events:
     get:
       tags: [Analytics]
       summary: Event analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
       responses:
         '200':
           description: Event analytics
@@ -317,6 +332,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsEventsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /api/analytics/journeys:
     get:
       tags: [Analytics]
@@ -327,6 +344,8 @@ paths:
           schema:
             type: string
           description: Optional session ID for a specific user journey
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
       responses:
         '200':
           description: Journey analytics
@@ -400,6 +419,144 @@ paths:
                   message:
                     type: string
                     example: Event acknowledged (storage skipped)
+  /api/v2/analytics/devices:
+    get:
+      tags: [Analytics V2]
+      summary: Device analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/DeviceParam'
+        - $ref: '#/components/parameters/BrowserParam'
+        - $ref: '#/components/parameters/EventTypeParam'
+        - $ref: '#/components/parameters/EngagementLevelParam'
+      responses:
+        '200':
+          description: Device analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/courses:
+    get:
+      tags: [Analytics V2]
+      summary: Course analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Course analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/videos:
+    get:
+      tags: [Analytics V2]
+      summary: Video analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Video analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/quizzes:
+    get:
+      tags: [Analytics V2]
+      summary: Quiz analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Quiz analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/users:
+    get:
+      tags: [Analytics V2]
+      summary: User analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/EngagementLevelParam'
+      responses:
+        '200':
+          description: User analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/funnels:
+    get:
+      tags: [Analytics V2]
+      summary: Funnel analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Funnel conversion metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/v2/analytics/timeseries:
+    get:
+      tags: [Analytics V2]
+      summary: Time series analytics
+      parameters:
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+        - $ref: '#/components/parameters/CourseIdParam'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/EventTypeParam'
+        - name: interval
+          in: query
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+            default: daily
+          description: Time grouping interval
+      responses:
+        '200':
+          description: Time series metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsV2SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 components:
   securitySchemes:
     BearerAuth:
@@ -429,6 +586,57 @@ components:
         minimum: 1
         maximum: 100
         default: 20
+    StartDateParam:
+      name: startDate
+      in: query
+      schema:
+        type: string
+        format: date
+      description: Optional start date filter (ISO 8601)
+    EndDateParam:
+      name: endDate
+      in: query
+      schema:
+        type: string
+        format: date
+      description: Optional end date filter (ISO 8601)
+    CourseIdParam:
+      name: courseId
+      in: query
+      schema:
+        type: string
+      description: Filter by course ID
+    UserIdParam:
+      name: userId
+      in: query
+      schema:
+        type: string
+      description: Filter by user ID
+    DeviceParam:
+      name: device
+      in: query
+      schema:
+        type: string
+      description: Filter by device type
+    BrowserParam:
+      name: browser
+      in: query
+      schema:
+        type: string
+      description: Filter by browser
+    EventTypeParam:
+      name: eventType
+      in: query
+      schema:
+        type: string
+      description: Filter by event type
+    EngagementLevelParam:
+      name: engagementLevel
+      in: query
+      schema:
+        type: string
+        enum: [Low, Medium, High]
+      description: Filter by engagement level
   responses:
     BadRequest:
       description: Invalid request
@@ -838,3 +1046,12 @@ components:
                   level:
                     type: string
                     enum: [Low, Medium, High]
+    AnalyticsV2SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          description: Module-specific analytics payload

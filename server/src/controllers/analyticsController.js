@@ -7,11 +7,13 @@ import {
 } from '../services/analyticsService.js'
 import { persistAuthenticatedTrackEvent } from '../services/eventTrackingService.js'
 import { buildTrackEventDocument } from '../utils/eventPayloadBuilder.js'
+import { extractAnalyticsFilters } from '../utils/analyticsQueryParser.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { analyticsLogger } from '../utils/analyticsLogger.js'
 
 export const getOverview = asyncHandler(async (req, res) => {
-  const data = await getOverviewAnalytics()
+  const filters = extractAnalyticsFilters(req.query)
+  const data = await getOverviewAnalytics(filters)
 
   res.status(200).json({
     success: true,
@@ -20,7 +22,8 @@ export const getOverview = asyncHandler(async (req, res) => {
 })
 
 export const getSessionsAnalytics = asyncHandler(async (req, res) => {
-  const data = await getSessionAnalytics()
+  const filters = extractAnalyticsFilters(req.query)
+  const data = await getSessionAnalytics(filters)
 
   res.status(200).json({
     success: true,
@@ -29,7 +32,8 @@ export const getSessionsAnalytics = asyncHandler(async (req, res) => {
 })
 
 export const getEventsAnalytics = asyncHandler(async (req, res) => {
-  const data = await getEventAnalytics()
+  const filters = extractAnalyticsFilters(req.query)
+  const data = await getEventAnalytics(filters)
 
   res.status(200).json({
     success: true,
@@ -39,7 +43,8 @@ export const getEventsAnalytics = asyncHandler(async (req, res) => {
 
 export const getJourneysAnalytics = asyncHandler(async (req, res) => {
   const { sessionId } = req.query
-  const data = await getJourneyAnalytics(sessionId)
+  const filters = extractAnalyticsFilters(req.query)
+  const data = await getJourneyAnalytics(sessionId, filters)
 
   res.status(200).json({
     success: true,
