@@ -1,0 +1,271 @@
+{
+  "/analytics/overview": {
+    "success": true,
+    "data": {
+      "totalUsers": 3,
+      "totalSessions": 1,
+      "totalEvents": 2,
+      "averageSessionDuration": 0,
+      "bounceRate": 100,
+      "activeUsers": 1
+    }
+  },
+  "/analytics/sessions": {
+    "success": true,
+    "data": {
+      "averageSessionDuration": 0,
+      "bounceRate": 100,
+      "activeUsers": 1,
+      "sessionDistribution": [
+        {
+          "bucket": "0-1 min",
+          "count": 1
+        },
+        {
+          "bucket": "1-5 min",
+          "count": 0
+        },
+        {
+          "bucket": "5-15 min",
+          "count": 0
+        },
+        {
+          "bucket": "15+ min",
+          "count": 0
+        }
+      ]
+    }
+  },
+  "/analytics/events": {
+    "success": true,
+    "data": {
+      "eventDistribution": [
+        {
+          "eventType": "CERTIFICATE_VIEWED",
+          "count": 2
+        }
+      ],
+      "mostVisitedPages": [],
+      "mostClickedButtons": [],
+      "mostSearchedCourses": []
+    }
+  },
+  "/analytics/journeys": {
+    "success": true,
+    "data": {
+      "userJourneys": [],
+      "dropOffPages": [],
+      "pageTransitions": []
+    }
+  },
+  "/analytics/engagement": {
+    "success": true,
+    "data": {
+      "engagementScores": [
+        {
+          "userId": "6a4617c2925bca5e295b81ef",
+          "engagementScore": 0
+        },
+        {
+          "userId": "6a462627e6c4a8eda5c67a55",
+          "engagementScore": 30
+        },
+        {
+          "userId": "6a4a3cc5587e273ce9db4d2b",
+          "engagementScore": 0
+        }
+      ],
+      "engagementLevels": [
+        {
+          "userId": "6a4617c2925bca5e295b81ef",
+          "level": "Low"
+        },
+        {
+          "userId": "6a462627e6c4a8eda5c67a55",
+          "level": "Low"
+        },
+        {
+          "userId": "6a4a3cc5587e273ce9db4d2b",
+          "level": "Low"
+        }
+      ]
+    }
+  },
+  "/v2/analytics/devices": {
+    "success": true,
+    "data": {
+      "byDeviceCategory": [
+        {
+          "category": "Desktop",
+          "count": 1
+        }
+      ],
+      "byOperatingSystem": [
+        {
+          "count": 1,
+          "name": "Windows"
+        }
+      ],
+      "byBrowser": [
+        {
+          "count": 1,
+          "name": "Chrome"
+        }
+      ],
+      "byScreenResolution": [],
+      "byLanguage": [],
+      "byTimezone": []
+    }
+  },
+  "/v2/analytics/courses": {
+    "success": true,
+    "data": {
+      "views": [],
+      "opens": [],
+      "enrollments": [],
+      "quizAttempts": [],
+      "completionRates": [],
+      "averageProgress": [],
+      "certificatesGenerated": [],
+      "averageTimeSpent": [],
+      "averageQuizScores": [],
+      "topPerformingCourses": [],
+      "trendingCourses": []
+    }
+  },
+  "/v2/analytics/videos": {
+    "success": true,
+    "data": {
+      "videoStarts": 0,
+      "videoCompletes": 0,
+      "completionRate": 0,
+      "averageWatchTime": 0,
+      "dropOffRate": 0,
+      "byVideo": [],
+      "mostReplayedVideos": [],
+      "mostSkippedVideos": [],
+      "videoPauses": []
+    }
+  },
+  "/v2/analytics/quizzes": {
+    "success": true,
+    "data": {
+      "quizStarts": 0,
+      "quizSubmissions": 0,
+      "passRate": 0,
+      "failRate": 0,
+      "averageScore": 0,
+      "questionAccuracy": [],
+      "mostIncorrectQuestions": [],
+      "hardestQuiz": null,
+      "easiestQuiz": null,
+      "byQuiz": []
+    }
+  },
+  "/v2/analytics/users": {
+    "success": true,
+    "data": {
+      "mostActiveUsers": [
+        {
+          "eventCount": 2,
+          "userId": "6a462627e6c4a8eda5c67a55"
+        }
+      ],
+      "inactiveUsers": [
+        {
+          "userId": "6a4617c2925bca5e295b81ef",
+          "name": "Test User",
+          "email": "test-1782978498946@example.com"
+        },
+        {
+          "userId": "6a4a3cc5587e273ce9db4d2b",
+          "name": "shivani",
+          "email": "shivani@gmail.com"
+        }
+      ],
+      "averageSessionCount": 1,
+      "averageEvents": 2,
+      "averageEngagement": 10,
+      "returningUsers": 0,
+      "firstTimeUsers": 1
+    }
+  },
+  "/v2/analytics/funnels": {
+    "success": true,
+    "data": {
+      "steps": [
+        {
+          "step": "Landing",
+          "eventType": "PAGE_VIEW",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        },
+        {
+          "step": "Course",
+          "eventType": "COURSE_OPEN",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        },
+        {
+          "step": "Lesson",
+          "eventType": "LESSON_STARTED",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        },
+        {
+          "step": "Video",
+          "eventType": "VIDEO_PLAY",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        },
+        {
+          "step": "Quiz",
+          "eventType": "QUIZ_START",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        },
+        {
+          "step": "Certificate",
+          "eventType": "CERTIFICATE_GENERATED",
+          "users": 0,
+          "conversionRate": 0,
+          "dropOffRate": 0
+        }
+      ],
+      "exitPoints": [],
+      "overallConversionRate": 0
+    }
+  },
+  "/v2/analytics/timeseries": {
+    "success": true,
+    "data": {
+      "interval": "daily",
+      "dailyEvents": [
+        {
+          "count": 2,
+          "period": "2026-07-02"
+        }
+      ],
+      "dailySessions": [
+        {
+          "count": 1,
+          "period": "2026-07-02"
+        }
+      ],
+      "dailyUsers": [
+        {
+          "count": 1,
+          "period": "2026-07-02"
+        }
+      ],
+      "dailyPageViews": [],
+      "dailyQuizAttempts": [],
+      "dailyVideoPlays": []
+    }
+  }
+}

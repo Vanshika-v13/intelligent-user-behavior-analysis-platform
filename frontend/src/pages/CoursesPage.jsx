@@ -36,7 +36,40 @@ const CoursesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    if (typeof window === 'undefined') return 'All';
+    const params = new URLSearchParams(window.location.search);
+    const catSlug = params.get('category');
+    if (!catSlug) return 'All';
+    
+    const slugMap = {
+      'database': 'Database',
+      'developer-tools': 'Developer Tools',
+      'programming': 'Programming',
+      'web-development': 'Web Development',
+      'tools': 'Tools'
+    };
+    return slugMap[catSlug] || catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const catSlug = params.get('category');
+    if (catSlug) {
+      const slugMap = {
+        'database': 'Database',
+        'developer-tools': 'Developer Tools',
+        'programming': 'Programming',
+        'web-development': 'Web Development',
+        'tools': 'Tools'
+      };
+      setSelectedCategory(slugMap[catSlug] || catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+      setCurrentPage(1);
+    } else if (!location.search) {
+      setSelectedCategory('All');
+    }
+  }, [location.search]);
+
   const [selectedDuration, setSelectedDuration] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
   

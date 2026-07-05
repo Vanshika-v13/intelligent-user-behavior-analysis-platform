@@ -25,7 +25,7 @@ const nodeCourse = {
   description: 'Learn backend development using Node.js and Express.js. Build REST APIs, understand middleware, work with MongoDB, and create scalable server-side applications. This course teaches the fundamentals of backend development using Node.js and Express.js. Students will learn how Node.js works internally, create REST APIs, handle routes and middleware, understand HTTP concepts, implement MVC architecture, and build production-ready server applications.',
   category: 'Web Development',
   thumbnail: 'nodejs.jpg',
-  duration: 122, // Corrected: realistic sum of all lesson durations (was 480 — incorrect 8×60)
+  duration: 480, // 8 Hours
   lessons: [
     {
       title: 'Introduction to Node.js',
