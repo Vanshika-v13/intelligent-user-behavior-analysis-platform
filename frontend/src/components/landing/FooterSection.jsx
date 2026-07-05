@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
+
 
 const FooterSection = () => {
   const currentYear = new Date().getFullYear();
@@ -14,8 +14,8 @@ const FooterSection = () => {
           {/* Column 1: Brand */}
           <div className="flex flex-col">
             <Link to="/" className="flex items-center gap-2 mb-6 group">
-              <div className="w-10 h-10 bg-[var(--color-primary)] rounded-[12px] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-[250ms]">
-                <BookOpen className="w-5 h-5 text-[var(--color-background)]" />
+              <div className="w-8 h-8 bg-orange-600 flex items-center justify-center rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-[250ms]">
+                <div className="w-4 h-4 bg-white rounded-sm rotate-45"></div>
               </div>
               <span className="text-[22px] font-bold text-[var(--color-primary-text)] tracking-tight">
                 LearnPulse

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { courseService } from '../services/courseService';
 import { progressService } from '../services/progressService';
-import { analyticsService } from '../services/analyticsService';
+import analyticsService from '../services/analytics/analyticsV1Service';
 import FooterSection from '../components/landing/FooterSection';
 import { useAuth } from '../context/AuthContext';
 

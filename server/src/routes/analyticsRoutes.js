@@ -7,11 +7,13 @@ import {
   getEngagementAnalytics,
   trackEvent,
 } from '../controllers/analyticsController.js'
+import { getAnalyticsExport } from '../controllers/analyticsExportController.js'
 import { protect } from '../middleware/authMiddleware.js'
 import { validateTrackEvent } from '../middleware/validateTrackEvent.js'
 
 const router = Router()
 
+router.get('/export', getAnalyticsExport)
 router.get('/overview', getOverview)
 router.get('/sessions', getSessionsAnalytics)
 router.get('/events', getEventsAnalytics)

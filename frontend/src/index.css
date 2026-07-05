@@ -4,9 +4,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #F97230;
-  --color-secondary: #FF8A4C;
-  --color-background: #FEFEFE;
+  /* Semantic Core Palette */
+  --color-primary: #EA580C;     /* LearnPulse Orange */
+  --color-secondary: #8b5cf6;   /* Purple */
+  --color-accent: #f59e0b;      /* Amber */
+  --color-success: #10b981;     /* Emerald */
+  --color-warning: #f59e0b;     /* Amber */
+  --color-error: #ef4444;       /* Red */
+  
+  --color-muted: #64748b;       /* Slate 500 */
+  --color-background: #f8fafc;  /* Slate 50 */
+  --color-surface: #ffffff;     /* White */
+  --color-border: #e2e8f0;      /* Slate 200 */
+
+  /* Compatibility Alias Layer (Legacy Colors) */
   --color-warm-white: #FAF9F7;
   --color-light-gray: #F0EFED;
   --color-border-gray: #DED9D3;
@@ -14,8 +25,12 @@
   --color-secondary-text: #5B5B5B;
   --color-footer: #121212;
 
+  /* Typography */
   --font-sans: 'Inter', sans-serif;
   --font-heading: 'Satoshi', 'General Sans', sans-serif;
+
+  /* Geometry & Elevation */
+  --radius-soft: 0.5rem; /* 8px */
 }
 
 @layer base {
@@ -30,5 +45,34 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.025em;
+  }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .shadow-premium {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  
+  .shadow-premium-hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
   }
 }

@@ -4,11 +4,10 @@ import { getCourseQuizResult } from '../services/quizService';
 import { ROUTES } from '../constants/routes';
 import { CheckCircle2, XCircle, RotateCcw, Home, BookOpen, Award, Download } from 'lucide-react';
 import { generateCertificate } from '../services/certificateService';
-import { analyticsService } from '../services/analyticsService';
+import analyticsService from '../services/analytics/analyticsV1Service';
 
 const QuizResultPage = () => {
   const { id: courseId } = useParams();
-  const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

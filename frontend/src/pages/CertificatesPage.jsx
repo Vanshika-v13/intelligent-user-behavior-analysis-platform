@@ -4,10 +4,9 @@ import { Award, Download, Clock, ExternalLink } from 'lucide-react';
 import { getMyCertificates, downloadCertificate, getCertificateViewUrl } from '../services/certificateService';
 import { useAuth } from '../context/AuthContext';
 import { ROUTES } from '../constants/routes';
-import { analyticsService } from '../services/analyticsService';
+import analyticsService from '../services/analytics/analyticsV1Service';
 
 const CertificatesPage = () => {
-  const { user } = useAuth();
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
 

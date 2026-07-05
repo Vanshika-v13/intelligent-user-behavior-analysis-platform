@@ -9,7 +9,6 @@ import { ROUTES } from '../constants/routes';
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   
   const [loading, setLoading] = useState(true);
   const [progresses, setProgresses] = useState([]);

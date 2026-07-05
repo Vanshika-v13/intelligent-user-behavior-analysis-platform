@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
-import AnalyticsLayout from '../layouts/AnalyticsLayout';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
 import LandingPage from '../pages/LandingPage';
@@ -22,6 +22,18 @@ import SettingsPage from '../pages/SettingsPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import CertificatesPage from '../pages/CertificatesPage';
 import { ROUTES } from '../constants/routes';
+
+// Analytics Route Code Splitting
+const AnalyticsLayout = lazy(() => import('../layouts/AnalyticsLayout'));
+const AnalyticsOverviewPage = lazy(() => import('../pages/analytics/AnalyticsOverviewPage'));
+const AnalyticsUsersPage = lazy(() => import('../pages/analytics/AnalyticsUsersPage'));
+const AnalyticsDevicesPage = lazy(() => import('../pages/analytics/AnalyticsDevicesPage'));
+const AnalyticsSessionsPage = lazy(() => import('../pages/analytics/AnalyticsSessionsPage'));
+const AnalyticsCoursesPage = lazy(() => import('../pages/analytics/AnalyticsCoursesPage'));
+const AnalyticsVideosPage = lazy(() => import('../pages/analytics/AnalyticsVideosPage'));
+const AnalyticsQuizzesPage = lazy(() => import('../pages/analytics/AnalyticsQuizzesPage'));
+const AnalyticsFunnelsPage = lazy(() => import('../pages/analytics/AnalyticsFunnelsPage'));
+const AnalyticsEngagementPage = lazy(() => import('../pages/analytics/AnalyticsEngagementPage'));
 
 const AppRoutes = () => {
   return (
@@ -53,9 +65,29 @@ const AppRoutes = () => {
         <Route path={ROUTES.MY_LEARNING} element={<ProtectedRoute><MyLearningPage /></ProtectedRoute>} />
         <Route path="/dashboard/quizzes" element={<ProtectedRoute><QuizResultsListPage /></ProtectedRoute>} />
         <Route path="/dashboard/certificates" element={<ProtectedRoute><CertificatesPage /></ProtectedRoute>} />
-        
-        {/* Analytics Foundation Routes */}
-        <Route path="/dashboard/analytics/*" element={<ProtectedRoute><AnalyticsLayout /></ProtectedRoute>} />
+      </Route>
+
+      {/* Analytics Foundation Routes (Isolated Module) */}
+      <Route 
+        path="/analytics" 
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading Analytics...</div>}>
+              <AnalyticsLayout />
+            </Suspense>
+          </ProtectedRoute>
+        } 
+      >
+        <Route index element={<AnalyticsOverviewPage />} />
+        <Route path="overview" element={<AnalyticsOverviewPage />} />
+        <Route path="users" element={<AnalyticsUsersPage />} />
+        <Route path="devices" element={<AnalyticsDevicesPage />} />
+        <Route path="sessions" element={<AnalyticsSessionsPage />} />
+        <Route path="courses" element={<AnalyticsCoursesPage />} />
+        <Route path="videos" element={<AnalyticsVideosPage />} />
+        <Route path="quizzes" element={<AnalyticsQuizzesPage />} />
+        <Route path="funnels" element={<AnalyticsFunnelsPage />} />
+        <Route path="engagement" element={<AnalyticsEngagementPage />} />
       </Route>
 
       {/* Fallback route */}

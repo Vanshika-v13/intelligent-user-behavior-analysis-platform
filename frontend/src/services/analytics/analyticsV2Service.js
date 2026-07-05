@@ -1,49 +1,41 @@
 import api from '../api';
-import { buildAnalyticsQuery } from '../../utils/analytics/queryHelpers';
 
 /**
- * Service for v2 Analytics APIs (/api/analytics/v2)
+ * Service for v2 Analytics APIs (/api/v2/analytics)
  */
 class AnalyticsV2Service {
-  async getDevices(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/devices${query}`);
+  async getDevices(filters, config = {}) {
+    const response = await api.get('/v2/analytics/devices', { params: filters, ...config });
     return response.data;
   }
 
-  async getCourses(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/courses${query}`);
+  async getCourses(filters, config = {}) {
+    const response = await api.get('/v2/analytics/courses', { params: filters, ...config });
     return response.data;
   }
 
-  async getVideos(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/videos${query}`);
+  async getVideos(filters, config = {}) {
+    const response = await api.get('/v2/analytics/videos', { params: filters, ...config });
     return response.data;
   }
 
-  async getQuizzes(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/quizzes${query}`);
+  async getQuizzes(filters, config = {}) {
+    const response = await api.get('/v2/analytics/quizzes', { params: filters, ...config });
     return response.data;
   }
 
-  async getUsers(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/users${query}`);
+  async getUsers(filters, config = {}) {
+    const response = await api.get('/v2/analytics/users', { params: filters, ...config });
     return response.data;
   }
 
-  async getFunnels(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/funnels${query}`);
+  async getFunnels(filters, config = {}) {
+    const response = await api.get('/v2/analytics/funnels', { params: filters, ...config });
     return response.data;
   }
 
-  async getTimeSeries(filters) {
-    const query = buildAnalyticsQuery(filters);
-    const response = await api.get(`/analytics/v2/timeseries${query}`);
+  async getTimeSeries(filters, config = {}) {
+    const response = await api.get('/v2/analytics/timeseries', { params: filters, ...config });
     return response.data;
   }
 }
