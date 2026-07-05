@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
+import AnalyticsLayout from '../layouts/AnalyticsLayout';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
 import LandingPage from '../pages/LandingPage';
@@ -52,6 +53,9 @@ const AppRoutes = () => {
         <Route path={ROUTES.MY_LEARNING} element={<ProtectedRoute><MyLearningPage /></ProtectedRoute>} />
         <Route path="/dashboard/quizzes" element={<ProtectedRoute><QuizResultsListPage /></ProtectedRoute>} />
         <Route path="/dashboard/certificates" element={<ProtectedRoute><CertificatesPage /></ProtectedRoute>} />
+        
+        {/* Analytics Foundation Routes */}
+        <Route path="/dashboard/analytics/*" element={<ProtectedRoute><AnalyticsLayout /></ProtectedRoute>} />
       </Route>
 
       {/* Fallback route */}
